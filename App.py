@@ -76,6 +76,8 @@ def run_interface(model, encoder, teams, last_stats):
 
                 st.info(f"Gol attesi **{t1}**: {l_h:.2f}\n\nGol attesi **{t2}**: {l_a:.2f}")
 
+            #Visualizzazione tabelle per data visualization
+
             # st.markdown("---")
             # st.subheader("📈 Grafico di Confronto dei Gol Attesi")
 
