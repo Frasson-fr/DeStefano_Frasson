@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Predictor import predict_match
 
+
+# Sviluppa l'interfaccia grafica partendo dai dati del modello già addestrato
 def run_interface(model, encoder, teams, last_stats):
-    """Sviluppa l'interfaccia grafica partendo dai dati del modello già addestrato."""
     st.set_page_config(page_title="Football Predictor PRO", page_icon="⚽", layout="centered")
 
     # Modifiche grafiche per nascondere i menu di sistema e pulire l'interfaccia
@@ -47,7 +48,7 @@ def run_interface(model, encoder, teams, last_stats):
 
             st.markdown("---")
 
-            # Divide la schermata in due macro-colonne per organizzare i risultati
+            # Divide la schermata in due colonne per organizzare i risultati
             main_col1, main_col2 = st.columns([1, 1], gap="large")
 
             # Colonna Sinistra: Mostra le percentuali di vittoria (1X2) con le barre grafiche
@@ -76,7 +77,7 @@ def run_interface(model, encoder, teams, last_stats):
 
                 st.info(f"Gol attesi **{t1}**: {l_h:.2f}\n\nGol attesi **{t2}**: {l_a:.2f}")
 
-            #Visualizzazione tabelle per data visualization
+            # Visualizzazione tabelle per data visualization
 
             # st.markdown("---")
             # st.subheader("📈 Grafico di Confronto dei Gol Attesi")

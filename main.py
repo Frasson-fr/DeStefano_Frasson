@@ -5,7 +5,7 @@ from App import run_interface
 
 @st.cache_resource
 def init_app():
-    # Sfrutta la cache di Streamlit per non riaddestrare il modello ad ogni click dell'utente
+    # Memorizza risultati per non riaddestrare il modello ad ogni click
     return load_and_train()
 
 
@@ -16,5 +16,5 @@ if result[0] is None:
 else:
     model, encoder, teams, last_stats = result
 
-    # Passa il modello IA e lo snapshot delle statistiche all'interfaccia grafica
+    # Passa al programma i dati delle squadre già elaborati per poterli usare nell'interfaccia
     run_interface(model, encoder, teams, last_stats)

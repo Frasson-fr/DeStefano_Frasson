@@ -4,7 +4,7 @@ from scipy.stats import poisson
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 
-# Elenco delle informazioni che l'IA userà per studiare le squadre
+# Elenco delle informazioni che l'ia userà per studiare le squadre
 FEATURES = [
     'HomeTeam_Enc', 'AwayTeam_Enc', 'HomeElo', 'AwayElo', 'EloDiff',
     'H_ScoredHome', 'H_ConcededHome', 'A_ScoredAway', 'A_ConcededAway',
@@ -12,8 +12,8 @@ FEATURES = [
 ]
 
 
+# Legge i dati storici delle partite, li trasforma in informazioni utili e insegna al modello come fare previsioni
 def load_and_train():
-    """Carica il dataset, esegue il feature engineering e addestra il modello."""
     try:
         df = pd.read_csv("data/Matches.csv", low_memory=False).rename(columns={'FTHome': 'FTHG', 'FTAway': 'FTAG'})
         df = df[df['Division'].isin(['E0', 'E1', 'E2'])].dropna(
@@ -84,9 +84,8 @@ def load_and_train():
     except Exception as e:
         return None, None, [], str(e)
 
-
+# Prende due squadre e calcola le probabilità 1X2 e i 3 punteggi esatti coerenti
 def predict_match(model, encoder, s, t1, t2):
-    """Prende due squadre e calcola le probabilità 1X2 e i 3 punteggi esatti coerenti."""
     data = pd.DataFrame([[
         encoder.transform([t1])[0], encoder.transform([t2])[0],
         s[t1]['Elo'], s[t2]['Elo'], s[t1]['Elo'] - s[t2]['Elo'],
@@ -94,13 +93,13 @@ def predict_match(model, encoder, s, t1, t2):
         s[t1]['form'], s[t2]['form']
     ]], columns=FEATURES)
 
-    # Chiede all'IA una prima percentuale di stima su chi vincerà la partita
+    # Chiede all'ia una prima percentuale di stima su chi vincerà la partita
     probs = model.predict_proba(data)[0]
     classes = list(model.classes_)
     raw_h = probs[classes.index('H')] if 'H' in classes else 0.34
     raw_a = probs[classes.index('A')] if 'A' in classes else 0.33
 
-    # Unisce la media dei gol storici con le percentuali dell'IA per trovare i gol attesi della partita
+    # Unisce la media dei gol storici con le percentuali dell'ia per trovare i gol attesi della partita
     l_h = max(0.4, ((s[t1]['h_scored'] + s[t2]['a_conceded']) / 2) * (1 + (raw_h - raw_a) * 0.2))
     l_a = max(0.3, ((s[t2]['a_scored'] + s[t1]['h_conceded']) / 2) * (1 - (raw_h - raw_a) * 0.2))
 
@@ -130,5 +129,5 @@ def predict_match(model, encoder, s, t1, t2):
     home_goals_dist = [poisson.pmf(i, l_h) for i in range(6)]
     away_goals_dist = [poisson.pmf(i, l_a) for i in range(6)]
 
-    # Adesso restituiamo TUTTI gli 8 elementi richiesti da app.py
+    # Vengono restituiti tutti gli 8 elementi richiesti da app.py
     return p_h, p_d, p_a, l_h, l_a, top_scores, home_goals_dist, away_goals_dist
